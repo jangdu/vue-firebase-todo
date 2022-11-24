@@ -23,27 +23,20 @@
   </div>
 </template>
 <script setup>
+// import
 import { onMounted, ref } from 'vue'
 import { db } from '@/firebase'
 import { collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { useStore } from 'vuex'
 
+// store states
 const store = useStore()
+
+// firebase refs
 const todosCollectionRef = collection(db, 'todos')
 
+//  get
 onMounted(async () => {
-/*  const querySnapshot = await getDocs(collection(db, 'todos'))
-  const fireData = []
-  querySnapshot.forEach((doc, i) => {
-    console.log(doc.id, ' => ', doc.data())
-    const todo = {
-      id: doc.id,
-      content: doc.data().content,
-      done: doc.data().done
-    }
-    fireData.push(todo)
-  })
-  store.state.db = fireData */
   onSnapshot(todosCollectionRef, (querySnapshot) => {
     const fireData = []
     const cities = []
@@ -60,6 +53,8 @@ onMounted(async () => {
     store.state.db = fireData
   })
 })
+
+// add todo
 const newTodoContent = ref('')
 
 const addTodo = () => {
@@ -69,9 +64,13 @@ const addTodo = () => {
   })
   newTodoContent.value = ''
 }
+
+// del todo
 const delTodo = (id) => {
   deleteDoc(doc(todosCollectionRef, id))
 }
+
+// checked todo
 const checkedTodo = (id) => {
   const filterDb = store.state.db.filter(item => item.id === id)
   const filterDbIndex = store.state.db.indexOf(filterDb[0])
@@ -85,9 +84,7 @@ export default {
   components: {},
   data () {
     return {
-      sampleData: '',
-      newContent: '',
-      done: 'btn btn-secondary'
+      sampleData: ''
     }
   },
   setup () {},
